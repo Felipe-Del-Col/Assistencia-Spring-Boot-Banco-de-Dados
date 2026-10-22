@@ -35,4 +35,22 @@ public class ClienteService {
     public List<ClienteResponse> listar() {
         return repo.findAll().stream().map(cliente -> mapper.paraResposta(cliente)).toList();
     }
+    public void deletar(Long id) {
+        repo.deleteById(id);
+    }
+
+    @Transactional
+    public ClienteResponse atualizar(Long id, ClienteRequest dto) {
+        Cliente cliente = repo.findById(id).orElseThrow();
+        cliente.setEmail(dto.email());
+        cliente.setNome(dto.nome());
+        cliente.setTelefone(dto.telefone());
+        cliente.setSenha(dto.senha());
+        return mapper.paraResposta(cliente);
+    }
+
+    public ClienteResponse pesquisarPorEmail(String email) {
+        Cliente cliente = repo.findByEmail(email).orElseThrow();
+        return mapper.paraResposta(cliente);
+    }
 }
